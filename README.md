@@ -8,7 +8,11 @@
 
 Your YouTube recommendations, one full video at a time. Scroll, swipe or press ↓ for the next one.
 
-[Firefox Add-ons](https://addons.mozilla.org/firefox/addon/longs-for-youtube/) · Chrome Web Store (coming soon)
+<a href="https://addons.mozilla.org/firefox/addon/longs-for-youtube/"><img src="https://img.shields.io/badge/Get%20it%20for-Firefox-FF7139?style=for-the-badge&logo=firefoxbrowser&logoColor=white" alt="Get it for Firefox" height="36"></a>
+&nbsp;
+<a href="https://github.com/ethembeldagli/yt-longs/releases/latest/download/yt-longs-chrome.zip"><img src="https://img.shields.io/badge/Download%20for-Chrome-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Download for Chrome" height="36"></a>
+
+<sub>Chrome Web Store coming soon · <a href="https://github.com/ethembeldagli/yt-longs/releases">All releases</a></sub>
 
 <img src="docs/preview.png" width="720" alt="Longs: a Shorts-style feed of full YouTube videos">
 
@@ -31,11 +35,11 @@ It uses YouTube's real player, so Premium (no ads), watch history, your quality 
 | Browser | Where |
 | --- | --- |
 | Firefox | [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/longs-for-youtube/) |
-| Chrome | Chrome Web Store coming soon. Until then, install it from this repo (below). |
+| Chrome | [Download the ZIP](https://github.com/ethembeldagli/yt-longs/releases/latest/download/yt-longs-chrome.zip) and install it as below. Chrome Web Store coming soon. |
 
 ### From this repo (Chrome, Brave and other Chromium browsers)
 
-1. Download this repo (**Code → Download ZIP**) and unzip it, or `git clone` it.
+1. Download [`yt-longs-chrome.zip`](https://github.com/ethembeldagli/yt-longs/releases/latest/download/yt-longs-chrome.zip) and unzip it (or `git clone` this repo).
 2. Open `chrome://extensions`.
 3. Turn on **Developer mode**.
 4. Click **Load unpacked** and choose the folder.
@@ -83,7 +87,7 @@ Longs runs entirely in your browser on youtube.com. It doesn't collect, send or 
 The main source is `manifest.json` and `src/`; that's the Chrome version.
 
 - `node scripts/build-firefox.mjs` regenerates the `firefox/` folder from it. Don't edit `firefox/` by hand.
-- `node scripts/package.mjs` builds both and makes the store uploads: `dist/longs-chrome.zip` (Chrome Web Store) and `dist/longs-firefox.zip` (Firefox Add-ons).
+- `node scripts/package.mjs` builds both and makes the store uploads: `dist/yt-longs-chrome.zip` (Chrome Web Store, and the Chrome download in releases) and `dist/yt-longs-firefox.zip` (Firefox Add-ons).
 
 ## Licence
 

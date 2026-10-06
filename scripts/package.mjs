@@ -1,6 +1,7 @@
 // Makes the ZIPs to upload to the stores, in ../dist:
-//   longs-chrome.zip   Chrome Web Store
-//   longs-firefox.zip  Firefox Add-ons (rebuilds firefox/ first)
+//   yt-longs-chrome.zip   Chrome Web Store, and the Chrome download on GitHub releases
+//   yt-longs-firefox.zip  Firefox Add-ons (rebuilds firefox/ first)
+// The names stay the same across versions so the README's download links always point at the latest release.
 // Run: node scripts/package.mjs
 import { execFileSync } from 'node:child_process';
 import { mkdirSync, rmSync } from 'node:fs';
@@ -17,5 +18,5 @@ const zip = (cwd, name) => {
   execFileSync('zip', ['-qr', '-X', path.join(dist, name), 'manifest.json', 'rules.json', 'LICENSE', 'src', 'icons', '-x', '*.DS_Store'], { cwd });
   console.log(`dist/${name}`);
 };
-zip(root, 'longs-chrome.zip');
-zip(path.join(root, 'firefox'), 'longs-firefox.zip');
+zip(root, 'yt-longs-chrome.zip');
+zip(path.join(root, 'firefox'), 'yt-longs-firefox.zip');
