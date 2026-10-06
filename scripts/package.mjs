@@ -1,5 +1,5 @@
 // Makes the ZIPs to upload to the stores, in ../dist:
-//   longs-chrome.zip   Chrome Web Store and Microsoft Edge Add-ons
+//   longs-chrome.zip   Chrome Web Store
 //   longs-firefox.zip  Firefox Add-ons (rebuilds firefox/ first)
 // Run: node scripts/package.mjs
 import { execFileSync } from 'node:child_process';

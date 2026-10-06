@@ -8,7 +8,7 @@
 
 Your YouTube recommendations, one full video at a time. Scroll, swipe or press ↓ for the next one.
 
-[Microsoft Edge Add-ons](#install) · [Firefox Add-ons](#install) · Chrome Web Store (coming soon)
+[Firefox Add-ons](https://addons.mozilla.org/firefox/addon/longs-for-youtube/) · Chrome Web Store (coming soon)
 
 <img src="docs/preview.png" width="720" alt="Longs: a Shorts-style feed of full YouTube videos">
 
@@ -30,14 +30,13 @@ It uses YouTube's real player, so Premium (no ads), watch history, your quality 
 
 | Browser | Where |
 | --- | --- |
-| Microsoft Edge | [Edge Add-ons](#) |
-| Firefox | [Firefox Add-ons](#) |
+| Firefox | [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/longs-for-youtube/) |
 | Chrome | Chrome Web Store coming soon. Until then, install it from this repo (below). |
 
-### From this repo (Chrome, Edge, Brave and other Chromium browsers)
+### From this repo (Chrome, Brave and other Chromium browsers)
 
 1. Download this repo (**Code → Download ZIP**) and unzip it, or `git clone` it.
-2. Open `chrome://extensions` (or `edge://extensions`).
+2. Open `chrome://extensions`.
 3. Turn on **Developer mode**.
 4. Click **Load unpacked** and choose the folder.
 5. Refresh any open YouTube tabs.
@@ -81,10 +80,10 @@ Longs runs entirely in your browser on youtube.com. It doesn't collect, send or 
 
 ## Development
 
-The main source is `manifest.json` and `src/`; that's the Chrome/Edge version.
+The main source is `manifest.json` and `src/`; that's the Chrome version.
 
 - `node scripts/build-firefox.mjs` regenerates the `firefox/` folder from it. Don't edit `firefox/` by hand.
-- `node scripts/package.mjs` builds both and makes the store uploads: `dist/longs-chrome.zip` (Chrome Web Store, Edge Add-ons) and `dist/longs-firefox.zip` (Firefox Add-ons).
+- `node scripts/package.mjs` builds both and makes the store uploads: `dist/longs-chrome.zip` (Chrome Web Store) and `dist/longs-firefox.zip` (Firefox Add-ons).
 
 ## Licence
 

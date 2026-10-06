@@ -1,7 +1,7 @@
-// Builds the Firefox version of the extension into ../firefox from the main (Chrome/Edge) source.
+// Builds the Firefox version of the extension into ../firefox from the main (Chrome) source.
 // Edit the files in src/ and the root manifest.json, then run:  node scripts/build-firefox.mjs
 //
-// Differences from the Chrome/Edge build:
+// Differences from the Chrome build:
 // - background runs as an event page ("scripts") instead of a service worker
 // - an add-on ID, the minimum Firefox version, and "collects no data" for Mozilla's add-on store
 // - extension APIs use Firefox's promise-based `browser.*` namespace
