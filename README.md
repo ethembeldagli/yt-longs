@@ -42,6 +42,14 @@ It uses YouTube's real player, so Premium (no ads), watch history, your quality 
 4. Click **Load unpacked** and choose the folder.
 5. Refresh any open YouTube tabs.
 
+### From this repo (Firefox 140 or later)
+
+1. Download this repo and unzip it.
+2. Open `about:debugging#/runtime/this-firefox`.
+3. Click **Load Temporary Add-on…** and choose `firefox/manifest.json`.
+
+Temporary add-ons are removed when Firefox restarts; install from Firefox Add-ons to keep it.
+
 ## Use it
 
 - Click **Longs** in YouTube's sidebar, right under **Shorts**.
@@ -70,6 +78,13 @@ Longs runs entirely in your browser on youtube.com. It doesn't collect, send or 
 | Storage | To remember your Auto-scroll setting |
 | Scripting | To start Longs in YouTube tabs that were already open when you installed it |
 | Declarative Net Request | To open `youtube.com/longs/…` links in Longs |
+
+## Development
+
+The main source is `manifest.json` and `src/`; that's the Chrome/Edge version.
+
+- `node scripts/build-firefox.mjs` regenerates the `firefox/` folder from it. Don't edit `firefox/` by hand.
+- `node scripts/package.mjs` builds both and makes the store uploads: `dist/longs-chrome.zip` (Chrome Web Store, Edge Add-ons) and `dist/longs-firefox.zip` (Firefox Add-ons).
 
 ## Licence
 

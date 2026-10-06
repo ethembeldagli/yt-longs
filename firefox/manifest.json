@@ -3,7 +3,6 @@
   "name": "YT Longs",
   "version": "1.0.1",
   "description": "Scroll through regular YouTube videos one at a time, just like Shorts.",
-  "minimum_chrome_version": "111",
   "icons": {
     "16": "icons/icon16.png",
     "32": "icons/icon32.png",
@@ -18,7 +17,9 @@
     }
   },
   "background": {
-    "service_worker": "src/background.js"
+    "scripts": [
+      "src/background.js"
+    ]
   },
   "permissions": [
     "storage",
@@ -79,6 +80,20 @@
         "default": "Alt+Shift+L"
       },
       "description": "Open or close YT Longs"
+    }
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "yt-longs@ethembeldagli.dev",
+      "strict_min_version": "140.0",
+      "data_collection_permissions": {
+        "required": [
+          "none"
+        ]
+      }
+    },
+    "gecko_android": {
+      "strict_min_version": "142.0"
     }
   }
 }

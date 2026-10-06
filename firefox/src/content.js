@@ -12,7 +12,7 @@
   document.querySelectorAll('.yt-longs-guide-entry').forEach((el) => el.remove());
 
   const ORIGIN = 'https://www.youtube.com';
-  const CSS_URL = chrome.runtime.getURL('src/overlay.css');
+  const CSS_URL = browser.runtime.getURL('src/overlay.css');
   const ID_RE = /^[\w-]{11}$/;
   const LOAD_MORE_AT = 6; // fetch more recommendations when this few are left
   const SLIDE_MS = 400; // keep in sync with .track transition in overlay.css
@@ -93,7 +93,7 @@
   let resizeTimer = 0;
   let nativeMenuAt = 0;
 
-  chrome.storage.local.get({ autoNext: true }).then((stored) => { settings = stored; });
+  browser.storage.local.get({ autoNext: true }).then((stored) => { settings = stored; });
 
   // ---------- YouTube data helpers ----------
 
@@ -1270,7 +1270,7 @@
     const item = queue[index];
     if (choice === 'autonext') {
       settings.autoNext = !settings.autoNext;
-      chrome.storage.local.set({ autoNext: settings.autoNext });
+      browser.storage.local.set({ autoNext: settings.autoNext });
       e.target.closest('[data-menu]').setAttribute('aria-checked', String(settings.autoNext));
       return;
     }
@@ -1771,7 +1771,7 @@
 
   // ---------- Toolbar button / shortcut ----------
 
-  chrome.runtime.onMessage.addListener((msg) => {
+  browser.runtime.onMessage.addListener((msg) => {
     if (msg?.type === 'yt-longs:toggle') isOpen ? close() : open();
   });
 

@@ -1,0 +1,967 @@
+/* Sizes and colors follow YouTube's desktop Shorts page. */
+
+:host {
+  all: initial;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+button {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible {
+  outline: 2px solid #3ea6ff;
+  outline-offset: 2px;
+}
+
+svg {
+  display: block;
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
+  flex: none;
+}
+
+/* ---------- "Longs" entry in YouTube's sidebar ---------- */
+
+:host(.yt-longs-guide-entry) {
+  display: block;
+  visibility: inherit; /* hide along with YouTube's sidebar */
+  --guide-text: #f1f1f1;
+  --guide-hover: rgba(255, 255, 255, 0.1);
+}
+
+:host(.yt-longs-guide-entry[data-theme="light"]) {
+  --guide-text: #0f0f0f;
+  --guide-hover: rgba(0, 0, 0, 0.05);
+}
+
+.guide {
+  display: flex;
+  align-items: center;
+  border-radius: 10px;
+  color: var(--guide-text);
+  font-family: Roboto, Arial, sans-serif;
+  cursor: pointer;
+}
+
+.guide:hover,
+.guide.active {
+  background: var(--guide-hover);
+}
+
+.guide.active {
+  font-weight: 500;
+}
+
+.guide-full {
+  height: 40px;
+  padding: 0 12px;
+  gap: 24px;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.guide-mini {
+  flex-direction: column;
+  justify-content: center;
+  width: 64px;
+  padding: 16px 0 14px;
+  gap: 6px;
+  font-size: 10px;
+  line-height: 14px;
+}
+
+/* ---------- Page ---------- */
+
+.root {
+  --bg: #0f0f0f;
+  --text: #f1f1f1;
+  --text2: #aaa;
+  --btn: rgba(255, 255, 255, 0.1);
+  --btn-hover: rgba(255, 255, 255, 0.2);
+  --raised: #212121;
+  --menu: #282828;
+  --divider: rgba(255, 255, 255, 0.2);
+
+  position: fixed;
+  top: 56px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2019; /* under YouTube's top bar (2020) so its menus and search still open on top */
+  container-type: size;
+  overflow: hidden;
+  color: var(--text);
+  pointer-events: none; /* only the parts below opt back in */
+  font: 400 14px/20px Roboto, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.root[data-theme="light"] {
+  --bg: #fff;
+  --text: #0f0f0f;
+  --text2: #606060;
+  --btn: rgba(0, 0, 0, 0.05);
+  --btn-hover: rgba(0, 0, 0, 0.1);
+  --raised: #fff;
+  --menu: #fff;
+  --divider: rgba(0, 0, 0, 0.1);
+}
+
+/* The video is 16:9 instead of 9:16, so it grows to whatever fits beside the action column.
+   It sits centred, leaving room above and below to see the end of the previous video and the
+   start of the next one (above the first video there's just the page background). */
+.stage {
+  --reserve: 104px; /* room for the up/down arrows */
+  --peek: clamp(48px, 9cqh, 110px); /* how much of the neighbouring videos shows */
+  --avail: 100cqw;
+  --panel-w: 0px;
+  --w: min(var(--avail) - 2 * var(--reserve) - 72px, (100cqh - 2 * (var(--peek) + 16px)) * 16 / 9);
+  --h: calc(var(--w) * 9 / 16);
+  --x: calc((var(--avail) - var(--w) - 72px) / 2);
+  --pitch: calc(var(--h) + 16px);
+  --top-gap: calc((100cqh - var(--h)) / 2);
+
+  position: absolute;
+  inset: 0;
+}
+
+/* Full screen: the video fills the screen, one per screen height, actions over its right edge. */
+.stage.fs {
+  --w: min(100cqw, 100cqh * 16 / 9);
+  --x: calc((100cqw - var(--w)) / 2);
+  --top-gap: calc((100cqh - var(--h)) / 2);
+  --pitch: 100cqh;
+}
+
+.stage.fs .backdrop {
+  background: #000;
+}
+
+.stage.fs .slide {
+  width: var(--w);
+}
+
+.stage.fs .frame {
+  border-radius: 0;
+}
+
+.stage.fs .actions {
+  z-index: 3;
+  right: 16px;
+  bottom: 88px;
+  width: 64px;
+}
+
+.stage.fs .action button {
+  background: rgba(0, 0, 0, 0.35);
+  color: #fff;
+}
+
+.stage.fs .action button:hover {
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.stage.fs .action .label {
+  color: #fff;
+  text-shadow: 0 0 3px rgba(0, 0, 0, 0.8);
+}
+
+.stage.fs .nav {
+  display: none;
+}
+
+.stage.fs:not(.ui) .slide.active .frame {
+  cursor: none;
+}
+
+.stage.with-panel {
+  --panel-w: min(480px, 38cqw);
+  --avail: calc(100cqw - var(--panel-w) - 24px);
+  --reserve: 24px;
+}
+
+@container (max-width: 720px) {
+  .stage {
+    --reserve: 12px;
+  }
+
+  .nav {
+    display: none !important;
+  }
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+.track {
+  position: absolute;
+  inset: 0;
+  transform: translateY(calc(var(--index, 0) * var(--pitch) * -1));
+  transition: transform 400ms cubic-bezier(0.2, 0.75, 0.25, 1);
+}
+
+.track.instant {
+  transition: none;
+}
+
+.stage.resizing .track,
+.stage.resizing .slide {
+  transition: all 0.3s ease;
+}
+
+/* ---------- One video ---------- */
+
+.slide {
+  position: absolute;
+  left: var(--x);
+  top: calc(var(--top-gap) + var(--i) * var(--pitch));
+  width: calc(var(--w) + 72px);
+  height: var(--h);
+}
+
+
+.frame {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--w);
+  height: 100%;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #000;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+/* Once the video is playing, YouTube's player shows through. */
+.slide.active.live .frame {
+  background: transparent;
+}
+
+.slide.active.live .thumb {
+  opacity: 0;
+}
+
+/* Ads keep their own "Skip" button clickable. */
+.stage.ad .slide.active .frame,
+.stage.native-menu .slide.active .frame {
+  pointer-events: none;
+}
+
+
+.thumb {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.15s ease;
+}
+
+/* Shorts-style controls drawn over the video; only its buttons take clicks. */
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  color: #fff;
+  pointer-events: none;
+}
+
+.overlay button,
+.overlay a,
+.overlay input,
+.overlay .progress {
+  pointer-events: auto;
+}
+
+.stage.ad .slide.active .overlay {
+  display: none;
+}
+
+.controls {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  right: 16px;
+  display: flex;
+  justify-content: space-between;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.slide.active.paused .controls,
+.stage.ui .slide.active .controls {
+  opacity: 1;
+}
+
+.slide:not(.active) .controls,
+.slide:not(.active) .progress {
+  visibility: hidden;
+}
+
+.ctl-group {
+  display: flex;
+  gap: 8px;
+}
+
+.ctl {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 24px;
+  background: rgba(0, 0, 0, 0.3);
+  color: #fff;
+}
+
+.ctl:hover {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.ctl[data-ctl="captions"] {
+  position: relative;
+}
+
+/* Red underline when subtitles are on, like YouTube's CC button. */
+.ctl[data-ctl="captions"][aria-pressed="true"]::after {
+  content: "";
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 9px;
+  height: 3px;
+  border-radius: 2px;
+  background: #f03;
+}
+
+.ctl.plain {
+  background: transparent;
+}
+
+.ctl.plain:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.vol {
+  display: flex;
+  align-items: center;
+  height: 48px;
+  border-radius: 24px;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.vol .ctl,
+.vol .ctl:hover {
+  background: transparent;
+}
+
+.vol input {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 0;
+  height: 4px;
+  margin: 0;
+  border-radius: 2px;
+  background:
+    linear-gradient(#fff, #fff) 0 / var(--vol, 100%) 100% no-repeat,
+    rgba(255, 255, 255, 0.3);
+  opacity: 0;
+  cursor: pointer;
+  transition: width 0.2s ease, opacity 0.2s ease, margin 0.2s ease;
+}
+
+.vol input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.vol:hover input,
+.vol:focus-within input {
+  width: 64px;
+  margin-right: 18px;
+  opacity: 1;
+}
+
+.stage.fs .i-fs,
+.stage:not(.fs) .i-fs-exit,
+.slide.paused .i-pause,
+.slide:not(.paused) .i-play,
+.stage.muted .i-vol,
+.stage:not(.muted) .i-mute,
+[aria-pressed="true"] > .i-heart,
+[aria-pressed="false"] > .i-heart-fill {
+  display: none;
+}
+
+.meta {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 56px 16px 22px;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0));
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+}
+
+.channel-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.handle {
+  overflow: hidden;
+  max-width: 45%;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.handle:hover {
+  text-decoration: underline;
+}
+
+.subscribe {
+  height: 40px;
+  margin-left: 4px;
+  padding: 0 16px;
+  border-radius: 20px;
+  background: #f1f1f1;
+  color: #0f0f0f;
+  font-size: 14px;
+  font-weight: 500;
+  text-shadow: none;
+}
+
+.subscribe:hover {
+  background: #d9d9d9;
+}
+
+.subscribe.subscribed {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+.subscribe.subscribed:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.title {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  max-width: 92%;
+  margin-top: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 20px;
+}
+
+.progress {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 0;
+  height: 18px;
+  display: flex;
+  align-items: flex-end;
+  cursor: pointer;
+  touch-action: none;
+}
+
+.bar {
+  position: relative;
+  width: 100%;
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.3);
+  transition: height 0.1s ease;
+}
+
+.progress:hover .bar,
+.progress.dragging .bar {
+  height: 5px;
+}
+
+.hovered {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  border-radius: inherit;
+  background: rgba(255, 255, 255, 0.5);
+  opacity: 0;
+}
+
+.progress:hover .hovered {
+  opacity: 1;
+}
+
+/* Frame preview and time above the bar while hovering, like YouTube's. */
+.preview {
+  position: absolute;
+  bottom: 24px;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-50%);
+  transition: opacity 0.1s ease;
+}
+
+.progress:hover .preview,
+.progress.dragging .preview {
+  opacity: 1;
+}
+
+.preview-frame {
+  width: 160px;
+  height: 90px;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #000;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.9), 0 4px 16px rgba(0, 0, 0, 0.5);
+}
+
+.preview-img {
+  background-repeat: no-repeat;
+  transform-origin: 0 0;
+}
+
+.preview-time {
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 20px;
+  text-shadow: none;
+}
+
+.played {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  border-radius: inherit;
+  background: #f03;
+}
+
+.head {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 13px;
+  height: 13px;
+  margin: -6.5px 0 0 -6.5px;
+  border-radius: 50%;
+  background: #f03;
+  transform: scale(0);
+  transition: transform 0.1s ease;
+}
+
+.progress:hover .head,
+.progress.dragging .head {
+  transform: scale(1);
+}
+
+.actions {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 72px;
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.action button {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 24px;
+  background: var(--btn);
+  color: var(--text);
+  transition: background 0.1s ease;
+}
+
+.action button:hover {
+  background: var(--btn-hover);
+}
+
+.action .label {
+  overflow: hidden;
+  max-width: 72px;
+  color: var(--text);
+  font-size: 12px;
+  line-height: 18px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.bezel {
+  position: absolute;
+  z-index: 3;
+  left: calc(var(--x) + var(--w) / 2 - 36px);
+  top: calc(var(--top-gap) + var(--h) / 2 - 36px);
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.bezel svg {
+  width: 36px;
+  height: 36px;
+}
+
+.bezel.pop {
+  animation: bezel 0.5s ease-out;
+}
+
+@keyframes bezel {
+  from {
+    opacity: 1;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.4);
+  }
+}
+
+/* ---------- Up / down arrows ---------- */
+
+.nav {
+  position: absolute;
+  pointer-events: auto;
+  z-index: 3;
+  top: 50%;
+  right: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transform: translateY(-50%);
+}
+
+.nav button {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 28px;
+  background: var(--btn);
+  color: var(--text);
+}
+
+.nav button:hover {
+  background: var(--btn-hover);
+}
+
+.nav button:disabled {
+  visibility: hidden;
+}
+
+.stage.with-panel .nav {
+  display: none;
+}
+
+/* ---------- ⋮ menu ---------- */
+
+.menu {
+  position: absolute;
+  pointer-events: auto;
+  z-index: 5;
+  min-width: 240px;
+  padding: 8px 0;
+  border-radius: 12px;
+  background: var(--menu);
+  color: var(--text);
+  box-shadow: 0 4px 32px rgba(0, 0, 0, 0.3);
+}
+
+.menu button {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  height: 40px;
+  padding: 0 16px;
+  font-size: 14px;
+  text-align: left;
+}
+
+.menu button:hover {
+  background: var(--btn);
+}
+
+.switch {
+  position: relative;
+  width: 36px;
+  height: 14px;
+  margin-left: auto;
+  border-radius: 7px;
+  background: var(--btn-hover);
+}
+
+.switch::after {
+  content: "";
+  position: absolute;
+  top: -3px;
+  left: -2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  transition: left 0.15s ease;
+}
+
+[aria-checked="true"] .switch {
+  background: rgba(62, 166, 255, 0.5);
+}
+
+[aria-checked="true"] .switch::after {
+  left: 18px;
+  background: #3ea6ff;
+}
+
+/* ---------- Comments panel ---------- */
+
+.panel {
+  position: absolute;
+  pointer-events: auto;
+  z-index: 3;
+  top: 8px;
+  right: 24px;
+  bottom: 32px;
+  width: var(--panel-w);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 12px;
+  background: var(--raised);
+}
+
+.root[data-theme="light"] .panel {
+  box-shadow: 0 0 0 1px var(--divider);
+}
+
+.panel-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 8px 12px 24px;
+  border-bottom: 1px solid var(--divider);
+}
+
+.panel-head h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 28px;
+}
+
+.panel-head .count {
+  color: var(--text2);
+  font-size: 16px;
+}
+
+.panel-close {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  margin-left: auto;
+  border-radius: 50%;
+}
+
+.panel-close:hover {
+  background: var(--btn);
+}
+
+.panel-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 24px 24px;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+
+.comment {
+  display: flex;
+  gap: 16px;
+  padding: 12px 0;
+}
+
+.comment img {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--btn);
+}
+
+.comment .who {
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.comment .who b {
+  margin-right: 4px;
+  font-weight: 500;
+}
+
+.comment .who span {
+  color: var(--text2);
+}
+
+.comment .text {
+  font-size: 14px;
+  line-height: 20px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.comment .likes {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+  color: var(--text2);
+  font-size: 12px;
+}
+
+.comment .likes svg {
+  width: 16px;
+  height: 16px;
+}
+
+.panel-status {
+  padding: 24px 0;
+  color: var(--text2);
+  text-align: center;
+}
+
+/* ---------- Loading, messages, toasts ---------- */
+
+.spinner {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 36px;
+  height: 36px;
+  margin: -18px 0 0 -18px;
+  border: 3px solid var(--btn-hover);
+  border-top-color: var(--text);
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.message {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  color: var(--text2);
+  font-size: 16px;
+  text-align: center;
+}
+
+.toast {
+  position: absolute;
+  z-index: 6;
+  left: 24px;
+  bottom: 24px;
+  max-width: calc(100% - 48px);
+  padding: 14px 16px;
+  border-radius: 8px;
+  background: #f1f1f1;
+  color: #0f0f0f;
+  font-size: 14px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(16px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.root[data-theme="light"] .toast {
+  background: #0f0f0f;
+  color: #fff;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
